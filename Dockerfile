@@ -12,19 +12,25 @@ RUN apt-get update \
     diffutils \
     file \
     git \
+    jq \
+    ldap-utils \
     less \
     lsof \
+    mysql-client \
     netcat-openbsd \
     ngrep \
     openssh-server \
     openssl \
     patch \
+    postgresql-client \
     psmisc \
+    rsync \
     screen \
     tcpdump \
     tmux \
     tshark \
     vim-tiny \
+    wget \
     xz-utils \
     zip unzip \
  && apt-get clean \
