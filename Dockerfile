@@ -38,22 +38,6 @@ RUN apt-get update \
 
 RUN rm -f /etc/ssh/ssh_host*
 
-RUN mkdir /root/.ssh/
-RUN touch /root/.ssh/authorized_keys && chmod 0600 /root/.ssh/authorized_keys
-
-RUN for user in \
-      bquartier \
-      cjeanneret \
-      ckaenzig \
-      dabelenda \
-      illambias \
-      mbornoz \
-      mcanevet \
-      mfournier \
-      raphink \
-      saimonn \
-      ; do curl -s https://github.com/${user}.keys >> /root/.ssh/authorized_keys; done
-
 RUN mkdir -p /var/run/sshd
 
 EXPOSE 22
