@@ -53,7 +53,10 @@ RUN rm -f /etc/ssh/ssh_host_*_key* \
 
 RUN useradd -r -d /home/sftp sftp \
  && mkdir -p /home/sftp/.ssh \
- && chown -R sftp.sftp /home/sftp
+ && chown -R sftp.sftp /home/sftp \
+ && useradd -r -d /home/shell shell \
+ && mkdir -p /home/shell/.ssh \
+ && chown -R shell.shell /home/shell
 
 EXPOSE 22
 
