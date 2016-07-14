@@ -1,6 +1,7 @@
 FROM debian:jessie
 MAINTAINER Marc Fournier <marc.fournier@camptocamp.com>
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive \
+    GOPATH=/go
 
 RUN apt-get update \
  && apt-get -y upgrade \
@@ -12,6 +13,7 @@ RUN apt-get update \
     diffutils \
     file \
     git \
+    golang-go \
     jq \
     ldap-utils \
     less \
@@ -35,14 +37,27 @@ RUN apt-get update \
     wget \
     xz-utils \
     zip unzip \
+ && go get github.com/camptocamp/github_pki \
+ && apt-get -y --purge autoremove golang-go \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-RUN rm -f /etc/ssh/ssh_host*
+RUN rm -f /etc/ssh/ssh_host_*_key* \
+ && mkdir -p /var/run/sshd /etc/ssh/ssh_host_keys \
+ && sed -i -e 's@/etc/ssh/ssh_host@/etc/ssh/ssh_host_keys/ssh_host@g' /etc/ssh/sshd_config \
+ && sed -i -e 's@^Subsystem sftp .*@Subsystem sftp internal-sftp@' /etc/ssh/sshd_config \
+ && echo "Match User sftp" >> /etc/ssh/sshd_config \
+ && echo "    AllowTcpForwarding no" >> /etc/ssh/sshd_config \
+ && echo "    X11Forwarding no" >> /etc/ssh/sshd_config \
+ && echo "    ForceCommand internal-sftp" >> /etc/ssh/sshd_config
 
-RUN mkdir -p /var/run/sshd
+RUN useradd -r -d /home/sftp sftp \
+ && mkdir -p /home/sftp/.ssh \
+ && chown -R sftp.sftp /home/sftp
 
 EXPOSE 22
+
+VOLUME ["/var/lib/data", "/etc/ssh/ssh_host_keys"]
 
 COPY /docker-entrypoint.sh /
 COPY /docker-entrypoint.d/* /docker-entrypoint.d/
