@@ -17,6 +17,7 @@ RUN apt-get update \
     less \
     lsof \
     mysql-client \
+    nano \
     netcat-openbsd \
     ngrep \
     openssh-server \
@@ -28,6 +29,7 @@ RUN apt-get update \
     screen \
     tcpdump \
     tmux \
+    tree \
     tshark \
     vim-tiny \
     wget \
